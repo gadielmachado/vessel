@@ -195,6 +195,16 @@ const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDele
     return `${(dateDiff / totalDays) * 100}%`;
   };
   
+  // Calcula a posição do dia atual para a linha vertical
+  const todayPosition = useMemo(() => {
+    const today = new Date();
+    // Se hoje estiver no intervalo do timeline
+    if (!isBefore(today, dateRange.startDate) && !isAfter(today, dateRange.endDate)) {
+      return calculateDatePosition(today);
+    }
+    return null; // Não mostrar a linha se hoje estiver fora do intervalo
+  }, [dateRange]);
+  
   const handleDeleteClick = (id: string) => {
     setConfirmDeleteId(id);
   };
@@ -350,6 +360,30 @@ const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDele
       
       <div className="w-full">
         <div className="relative w-full px-4 py-2">
+          {/* Linha vertical para o primeiro navio (se houver navios) */}
+          {vessels.length > 0 && (
+            <div 
+              className="absolute border-l border-gray-300 z-0" 
+              style={{
+                left: calculateDatePosition(parseISO(vessels[0].loadingPort.eta)),
+                top: "10px",
+                height: "calc(100% - 80px)"
+              }}
+            />
+          )}
+          
+          {/* Linha vertical para o dia atual */}
+          {todayPosition && (
+            <div 
+              className="absolute border-l-2 border-gray-400 z-0" 
+              style={{ 
+                left: todayPosition,
+                top: "10px",
+                height: "calc(100% - 80px)"
+              }}
+            />
+          )}
+
           {/* Vessel rows */}
           <div className="mt-8">
             {vessels.map((vessel) => {
@@ -392,13 +426,13 @@ const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDele
                   <div className="flex-grow relative h-full">
                     {/* Complete journey line - blue background */}
                     <div 
-                      className="absolute h-8 top-[10px] bg-blue-100 rounded-[12px] w-full"
+                      className="absolute h-8 top-[10px] bg-blue-100 rounded-[6px] w-full"
                       style={routePosition}
                     ></div>
                     
                     {/* Progress line - yellow background */}
                     <div 
-                      className="absolute h-8 top-[10px] bg-[#3E4EFF] rounded-l-[12px]"
+                      className="absolute h-8 top-[10px] bg-[#3E4EFF] rounded-l-[6px]"
                       style={{
                         left: routePosition.left,
                         width: progressWidth
@@ -434,11 +468,11 @@ const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDele
                       <MapPin className="h-4 w-4 text-blue-500 mr-2" />
                     </div>
    
-                    {/* Ship position marker - centered on the end of progress line */}
+                    {/* Ship position marker - centered on the end of progress line, mas um pouco mais à esquerda para não cobrir o nome do porto */}
                     <div
                       className="absolute top-[8px] z-30"
                       style={{
-                        left: shipPosition,
+                        left: `calc(${shipPosition} - 10px)`,
                         transform: 'translateX(-50%)',
                       }}
                     >
