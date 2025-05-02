@@ -38,29 +38,14 @@ const EmbedView: React.FC = () => {
   return (
     <div className="p-0 pb-2 h-screen bg-white">
       <div className="max-w-full mx-auto">
-        {/* Cabeçalho */}
-        <div className="bg-gray-50 px-4 py-3 flex items-center border-b mb-4">
-          <div className="flex-1">
-            <h1 className="text-xl font-semibold">Brazil Stone Shipping</h1>
-            <p className="text-xs text-gray-500">Linha do Tempo - Movimentações de Navios</p>
-          </div>
-          <div className="text-xs text-gray-500 text-right">
-            Atualizado em: {new Date().toLocaleDateString('pt-BR')}
-          </div>
-        </div>
-        
         {/* Timeline */}
         <div className="px-2">
           <VesselTimeline 
             vessels={vessels} 
             onEdit={() => {}} 
             onDelete={() => {}}
+            isEmbedded={true}
           />
-        </div>
-        
-        {/* Rodapé */}
-        <div className="mt-auto p-2 text-center text-xs text-gray-400">
-          <p>VesselView © {new Date().getFullYear()} · Brazil Stone Shipping</p>
         </div>
       </div>
     </div>

@@ -24,9 +24,10 @@ interface VesselTimelineProps {
   vessels: Vessel[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  isEmbedded?: boolean;
 }
 
-const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDelete }) => {
+const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDelete, isEmbedded = false }) => {
   const { toast } = useToast();
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [selectedVessel, setSelectedVessel] = useState<Vessel | null>(null);
@@ -341,9 +342,11 @@ const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDele
   
   return (
     <div className="bg-white rounded-lg shadow animate-fade-in">
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-semibold">Vessels Fresh Movements</h2>
-      </div>
+      {!isEmbedded && (
+        <div className="p-4 border-b">
+          <h2 className="text-xl font-semibold">Vessels Fresh Movements</h2>
+        </div>
+      )}
       
       <div className="w-full">
         <div className="relative w-full px-4 py-2">
@@ -445,30 +448,32 @@ const VesselTimeline: React.FC<VesselTimelineProps> = ({ vessels, onEdit, onDele
                     </div>
 
                     {/* Action buttons - aligned with end of the vessel timeline */}
-                    <div 
-                      className="absolute flex items-center space-x-1 z-20 h-8 pl-2" 
-                      style={{
-                        left: `calc(${parseFloat(dischargePosition.left) + parseFloat(dischargePosition.width)}% + 10px)`,
-                        top: "10px"
-                      }}
-                    >
-                      <Button 
-                        size="icon" 
-                        variant="outline"
-                        className="h-6 w-6 bg-white"
-                        onClick={() => onEdit(vessel.id)}
+                    {!isEmbedded && (
+                      <div 
+                        className="absolute flex items-center space-x-1 z-20 h-8 pl-2" 
+                        style={{
+                          left: `calc(${parseFloat(dischargePosition.left) + parseFloat(dischargePosition.width)}% + 10px)`,
+                          top: "10px"
+                        }}
                       >
-                        <Pencil className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="h-6 w-6 bg-white text-destructive"
-                        onClick={() => handleDeleteClick(vessel.id)}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
+                        <Button 
+                          size="icon" 
+                          variant="outline"
+                          className="h-6 w-6 bg-white"
+                          onClick={() => onEdit(vessel.id)}
+                        >
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-6 w-6 bg-white text-destructive"
+                          onClick={() => handleDeleteClick(vessel.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
