@@ -23,8 +23,8 @@ const App = () => (
           <Route path="/" element={<ViewVessels />} />
           <Route path="/add" element={<AddVessel />} />
           <Route path="/edit/:id" element={<EditVessel />} />
-          <Route path="/embed" element={<EmbedView />} />
-          <Route path="/embed-code" element={<EmbedCodePage />} />
+          <Route path="/embed" element={<EmbedCodePage />} />
+          <Route path="/embed-view" element={<EmbedView />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
